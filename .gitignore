@@ -1,6 +1,7 @@
 implementation/transient_versions
 .DS_Store
 */.DS_Store
+typing_rts_JS.Rproj
 
 .Rproj.user
 .Rhistory
