@@ -17,14 +17,14 @@ layout name, in our case QWERTZ)
 We recommend to present your stimulus and start the timer only after the page has been fully loaded, e.g. by using the *window.onlad()* JS function. For an example, check out our SoSciSurvey ([Leiner,2019](https://www.soscisurvey.de/)) implementation below. 
 
 ### Implementations
-<img src="https://github.com/kirstenstark/typing_RTs_JS/pictures/example_potato.png" width="100">
-
-(How a trial looks like for the participant)
-
-
 We computed our [experiment](add-link-to-preprint-here) in SoSciSurvey. [Here](https://github.com/kirstenstark/typing_RTs_JS/tree/master/implementation) you can find the relevant code bits of the main experimental task, including the timing of picture presentation and the function presented above.  
 
 Adding a jsPsych implementation is planned.
+
+<img src="https://github.com/kirstenstark/typing_RTs_JS/blob/master/pictures/example_potato.png" width="300">
+
+(How a trial looks like for the participant)
+
 
 ## Citation
 
