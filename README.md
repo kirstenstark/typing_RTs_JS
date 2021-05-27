@@ -2,6 +2,16 @@
 
 JavaScript code (a) to screen for a specific type of computer keyboard and (b) to collect typewritten responses (keypresses and reaction times) in a picture naming task.
 
+## Keyboard screening
+When running reaction time-sensitive experiments with typewritten responses, you may want to ensure that all relevant characters have direct keys and that key  positions are identical between participants. Therefore, you may want to screen for the keyboard a participant uses. [Here](https://github.com/kirstenstark/typing_RTs_JS/blob/master/qwertz_keyboard_screen.html) is one JavaScript-based solution to screen for a QWERTZ-keyboard. It can easily be adapted to other keyboard types and implemented to your experimentatal platform, as long as it accepts JavaScript code.  
+The underlying idea is to compare the event.key and event.code of characters specific to a certain language and keyboard position. 
+
+![Keyboard keys defining the keyboard layout name, in our case QWERTZ](pictures/keyboard_windows.png)
+
+## Typing RTs
+
+
+### Implementations
 The script contains five functions that allow to automatically preprocess typed answers, e.g. from a picture naming task:
 
     Delete spaces or enter keys at the end of a typed word,
@@ -19,9 +29,13 @@ Examples
 
 An exemplary application of the functions is provided here.
 The functions were also used for our preprint: add-preprint-here.
-Citation
+
+## How to continue?
+
+## Citation
 
 If you decide to use these functions, I'd be happy if you would cite them: Stark, K. (2021). Stringmatch_typed_naming. GitHub Repository. https://github.com/kirstenstark/stringmatch_typed_naming
-Any comments, suggestions, extensions?
+
+### Any comments, suggestions, extensions?
 
 ... please let me know!
