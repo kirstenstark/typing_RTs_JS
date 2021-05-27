@@ -5,133 +5,133 @@
       <meta charset="utf-8"/>
   </head>
   <body>
-    <?php
-      $ar1=array(
-        array ('pictures/schachtel.png','Schachtel','AW01','TI01','XT01'),
-        array ('pictures/steckdose.png','Steckdose','AW02','TI02','XT02'),
-        array ('pictures/delfin.png','Delfin','AW03','TI03','XT03'),
-        array ('pictures/bus.png','Bus','AW04','TI04','XT04'));
+  <questionnaire>
+      <!-- Array -->
+      <page ident="array" intID="1">
+      <php intID="1"><![CDATA[
+        $ar1=array(
+          array ('pictures/schachtel.png','Schachtel','AW01','TI01','XT01'),
+          array ('pictures/steckdose.png','Steckdose','AW02','TI02','XT02'),
+          array ('pictures/delfin.png','Delfin','AW03','TI03','XT03'),
+          array ('pictures/bus.png','Bus','AW04','TI04','XT04'));
         <!-- internal variables AW01_01...AW*n*_01,-->
         <!--    TI01_01...TI01_40...TI*n*_01...TI*n*_40,-->
         <!--    XT01_01...XT01_40...XT*n*_01...XT*n*_40-->
-        <!--    need to be defined beforehand as internal-->
-        <!--    variables
-      $x=1;
-    ?>
+        <!--    need to be defined beforehand as internal variables-->
+        registerVariable('ar1');
 
-    <!-- loop through the entire array -->
-    <?php while($x != count($ar1) {
-        <!-- get picture names and output file variables -->
-        <?php
+        // Order variable
+        $x=0;
+        registerVariable('x');
+        ]]></php>
+      </page>
+
+      <!-- Main trials -->
+      <page ident="main" intID="2">
+      <!--php code to load variables-->
+      <php intID="2"><![CDATA[
+        // get picture and internal variables (for php and javascript code)
         $opentext = $ar1[$x][2];
         $letters = $ar1[$x][4];
         $timing = $ar1[$x][3];
 
         replace('%picture%', $ar1[$x][0]);
         replace('%opentext%', $ar1[$x][2]);
-        replace('%letters%', $ar1[$x][4]);
-        replace('%timing%', $ar1[$x][3]);
-        ?>
+        replace('%letters%', $ar1[$x][3]);
+        replace('%timing%', $ar1[$x][4]);
 
-      <!-- define image and display fixcross  -->
-      <link rel="prefetch" href='.$ar1[$x][0].'/>
-      <center><img id="pic" src='pictures/fix.png'></center>
-      <!-- display text input field, text displayed in uppercase -->
-      <tr> <td><center><input id="answer" type="text" style = "text-transform:uppercase;margin: 20px;"> </center></td></tr>
+        //display image and text input field
+        html('<link rel="prefetch" href='.$ar1[$x][0].'/>');
+        html('<center><img id="pic" src="fix_klein.png"></center>');
+        html('<tr> <td><center><input id="answer" type="text" style = "text-transform:uppercase;margin: 20px;"> </center></td></tr>'); //display text input field
 
-      <!-- info how to proceed to next trial -->
-      <br><center><strong>Press Space or Enter to proceed to next page</strong> </center><br><br><br>
+        // info how to proceed to next field
+        html('<br><center><strong>To next page with space bar</strong> </center><br><br><br>');
 
-      <!-- load output file variables (internal variables) as defined above -->
-      <?php
-      question($opentext);
-      question($letters);
-      question($timing);
-      ?>
+        // load internal variables
+        question($opentext); // internal variable
+        question($letters); // internal variable
+        question($timing); // internal variable
+        ]]></php>
 
-       <!-- JavaScript code to display image and collect button presses and RTs -->
-      <script type="text/javascript">
-        // START ACTIONS ONLY AS SOON AS PAGE WAS FULLY LOADED:
+        <html intID="1"><![CDATA[
+        <!-- JS code for stimulus display and RT assessment -->
+        <script type="text/javascript">
+
         window.onload = function() {
-            // decide whether participants should be allowed to use the
-            // backspace or delete buttons
-            var corrections = 'yes'; // alternatively: 'no'
-
             // disable submit buttons and set cursor to text input field
-            SoSciTools.submitButtonsHide(); // hide "next" button in SoSciSurvey
-            document.getElementById("submit0").disabled = true;
-            document.getElementById("buttonsAuto").style.display = "none";
             document.getElementById('answer').focus();
 
-            // show picture after 500ms of fixation cross when page was fully loaded
-            // and start timer upon picture presentation
+            // show picture after 500ms of fixation cross
             setTimeout(function() {
-              document.getElementById('pic').setAttribute('src', '%picture%');
-              start = new Date();
-            }, 500);
+                document.getElementById('pic').setAttribute('src', '%picture%');
+                start = new Date();
+                }, 500);
 
             // if no answer is provided, proceed to next page after 6000ms (6s)
             setTimeout(function() {
-              SoSciTools.submitPage();
-            }, 6000);
+              SoSciTools.submitPage(); // this may be replace with custom submit function
+            }, 12000);
 
             // define variables
             var start;
             var counter = 1;
             var input='';
+            var corrections = 'yes';
 
             // define what happens when a keyboard button is pressed
-            // (alternatively, use function typing_rts_JS here)
-            document.addEventListener('keydown', function(entry) {
-                   // define input
+            document.addEventListener('keydown', function(eingabe) {
+                 // define input
                 var t = new Date()-start; // get rt from the moment when the picture was first displayed
 
-                   // disable backspace and delete keys and save input (entire word)
+                // save pressed key
+                    // corrections allowed
                 if(corrections == 'yes') {
-                  input=input+entry.key;
+                  input=input+entry.key; // entire string of pressed keys
                 } else {
-                  if(entry.keyCode === 8 || entry.keyCode === 46) {
-                    // 8 is BackSpace, 46 is delete- they should have no effect
-                      event.preventDefault();
+                    // corrections not allowed
+                  // disable backspace and delete keys and save input (entire word)
+                  if(entry.keyCode === 8 || entry.keyCode === 46) { // 8 is BackSpace, 46 is delete
+                     event.preventDefault();
                   } else {
-                        // the variable input contains the input a participant is seeing
-                        // (NO BackSpace, delete allowed), while the variables
-                        // %timing% and %letters% contain letters and timing
-                        // for each pressed key, INCLUDING BackSpaces and delete keys
-                      input=input+entry.key; // get total input
-                  }
+                     // the variable input contains the input a participant is seeing
+                     // (NO BackSpace, delete allowed), while the variables XT/XU and
+                     // TI/TJ contain letters and timing for each pressed key,
+                     // INCLUDING BackSpaces and deleted keys
+                     input=input+entry.key; // entire string of pressed keys
                 }
 
-                  // use if proceed to next page only by space bar:
-                  //if ((eingabe.keyCode == 13) && counter > 2) { //32 is the space bar
-                  //    document.getElementById('%opentext%'+'_01').value = input; // save total input into internal variable opentext
-                  //     SoSciTools.submitPage(); // submit page in SoSciSurvey
-                  //
-                  //}
+                // use if proceed to next page only by space bar:
+                if ((eingabe.keyCode == 13) && counter > 2) { //32 is the space bar
+                   document.getElementById('%opentext%'+'_01').value = input; // save total input into internal variable opentext
+                   SoSciTools.submitPage(); // submit page, or custom sumbission code
+                }
 
-                  // save current key and timing into internal variables
+                // save current key and timing into internal variables
                 if (counter < 10) {
                     document.getElementById('%timing%'+'_0'+counter).value = (t);
-                    document.getElementById('%letters%'+'_0'+counter).value = entry.key;
+                    document.getElementById('%letters%'+'_0'+counter).value = eingabe.key;
                 } else {
                     document.getElementById('%timing%'+'_'+counter).value = (t);
-                    document.getElementById('%letters%'+'_'+counter).value = entry.key;
+                    document.getElementById('%letters%'+'_'+counter).value = eingabe.key;
                 }
-                    counter=counter+1;
-                })
+                counter=counter+1;
+            }})
+        }
 
-             // proceed to next page if space bar or enter key are pressed
-             document.addEventListener('keyup', function(eingabe) {
-               if ((eingabe.keyCode == 32 || eingabe.keyCode == 13) && counter > 2) {
-                 //32 is the space bar, 13 is enter
-                 // save total input into internal variable opentext:
-                    document.getElementById('%opentext%'+'_01').value = input;
-                    SoSciTools.submitPage(); // submit page in SoSciSurvey
-             }})
-
-          }
         </script>
-        <?php ++$x ?>
-    <?php } ?>
-  </body>
-</html>
+      ]]></html>
+      </page>
+
+
+      <!-- loop through entire array -->
+      <page ident="loop" intID="3">
+      <php intID="3"><![CDATA[
+        // loop through entire array of main experiment
+        $x=$x+1;
+        if ($x < count($ar1)) { goToPage('main1'); }
+      ]]></php>
+      </page>
+
+  </questionnaire>
+</body>
