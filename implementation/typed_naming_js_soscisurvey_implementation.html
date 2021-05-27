@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Typed_naming_JS (SoSciSurvey implementation)</title>
+      <meta charset="utf-8"/>
+  </head>
+  <body>
+    <?php
+      $ar1=array(
+        array ('pictures/schachtel.png','Schachtel','AW01','TI01','XT01'),
+        array ('pictures/steckdose.png','Steckdose','AW02','TI02','XT02'),
+        array ('pictures/delfin.png','Delfin','AW03','TI03','XT03'),
+        array ('pictures/bus.png','Bus','AW04','TI04','XT04'));
+        <!-- internal variables AW01_01...AW*n*_01,-->
+        <!--    TI01_01...TI01_40...TI*n*_01...TI*n*_40,-->
+        <!--    XT01_01...XT01_40...XT*n*_01...XT*n*_40-->
+        <!--    need to be defined beforehand as internal-->
+        <!--    variables
+      $x=1;
+    ?>
+
+    <!-- loop through the entire array -->
+    <?php while($x != count($ar1) {
+        <!-- get picture names and output file variables -->
+        <?php
+        $opentext = $ar1[$x][2];
+        $letters = $ar1[$x][4];
+        $timing = $ar1[$x][3];
+
+        replace('%picture%', $ar1[$x][0]);
+        replace('%opentext%', $ar1[$x][2]);
+        replace('%letters%', $ar1[$x][4]);
+        replace('%timing%', $ar1[$x][3]);
+        ?>
+
+      <!-- define image and display fixcross  -->
+      <link rel="prefetch" href='.$ar1[$x][0].'/>
+      <center><img id="pic" src='pictures/fix.png'></center>
+      <!-- display text input field, text displayed in uppercase -->
+      <tr> <td><center><input id="answer" type="text" style = "text-transform:uppercase;margin: 20px;"> </center></td></tr>
+
+      <!-- info how to proceed to next trial -->
+      <br><center><strong>Press Space or Enter to proceed to next page</strong> </center><br><br><br>
+
+      <!-- load output file variables (internal variables) as defined above -->
+      <?php
+      question($opentext);
+      question($letters);
+      question($timing);
+      ?>
+
+       <!-- JavaScript code to display image and collect button presses and RTs -->
+      <script type="text/javascript">
+        // START ACTIONS ONLY AS SOON AS PAGE WAS FULLY LOADED:
+        window.onload = function() {
+            // decide whether participants should be allowed to use the
+            // backspace or delete buttons
+            var corrections = 'yes'; // alternatively: 'no'
+
+            // disable submit buttons and set cursor to text input field
+            SoSciTools.submitButtonsHide(); // hide "next" button in SoSciSurvey
+            document.getElementById("submit0").disabled = true;
+            document.getElementById("buttonsAuto").style.display = "none";
+            document.getElementById('answer').focus();
+
+            // show picture after 500ms of fixation cross when page was fully loaded
+            // and start timer upon picture presentation
+            setTimeout(function() {
+              document.getElementById('pic').setAttribute('src', '%picture%');
+              start = new Date();
+            }, 500);
+
+            // if no answer is provided, proceed to next page after 6000ms (6s)
+            setTimeout(function() {
+              SoSciTools.submitPage();
+            }, 6000);
+
+            // define variables
+            var start;
+            var counter = 1;
+            var input='';
+
+            // define what happens when a keyboard button is pressed
+            // (alternatively, use function typing_rts_JS here)
+            document.addEventListener('keydown', function(entry) {
+                   // define input
+                var t = new Date()-start; // get rt from the moment when the picture was first displayed
+
+                   // disable backspace and delete keys and save input (entire word)
+                if(corrections == 'yes') {
+                  input=input+entry.key;
+                } else {
+                  if(entry.keyCode === 8 || entry.keyCode === 46) {
+                    // 8 is BackSpace, 46 is delete- they should have no effect
+                      event.preventDefault();
+                  } else {
+                        // the variable input contains the input a participant is seeing
+                        // (NO BackSpace, delete allowed), while the variables
+                        // %timing% and %letters% contain letters and timing
+                        // for each pressed key, INCLUDING BackSpaces and delete keys
+                      input=input+entry.key; // get total input
+                  }
+                }
+
+                  // use if proceed to next page only by space bar:
+                  //if ((eingabe.keyCode == 13) && counter > 2) { //32 is the space bar
+                  //    document.getElementById('%opentext%'+'_01').value = input; // save total input into internal variable opentext
+                  //     SoSciTools.submitPage(); // submit page in SoSciSurvey
+                  //
+                  //}
+
+                  // save current key and timing into internal variables
+                if (counter < 10) {
+                    document.getElementById('%timing%'+'_0'+counter).value = (t);
+                    document.getElementById('%letters%'+'_0'+counter).value = entry.key;
+                } else {
+                    document.getElementById('%timing%'+'_'+counter).value = (t);
+                    document.getElementById('%letters%'+'_'+counter).value = entry.key;
+                }
+                    counter=counter+1;
+                })
+
+             // proceed to next page if space bar or enter key are pressed
+             document.addEventListener('keyup', function(eingabe) {
+               if ((eingabe.keyCode == 32 || eingabe.keyCode == 13) && counter > 2) {
+                 //32 is the space bar, 13 is enter
+                 // save total input into internal variable opentext:
+                    document.getElementById('%opentext%'+'_01').value = input;
+                    SoSciTools.submitPage(); // submit page in SoSciSurvey
+             }})
+
+          }
+        </script>
+        <?php ++$x ?>
+    <?php } ?>
+  </body>
+</html>
