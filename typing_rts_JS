@@ -3,73 +3,96 @@
 // ------------------------------------------------------------
 // This function defines what happens during the typing task
 // (e.g. a picture naming task) each time a button is pressed.
-// The function should be called using the 'keydown' event, e.g.
-// as follows:
-// document.addEventListener('keydown', typing_rts(entry))
-// See the github documentation for further infos.
+// The function should be called when the page was fully loaded,
+// e.g. by using
+// window.onload=typing_rts(...)
+//
 // ------------------------------------------------------------
 // CITATION: Stark, K. (2021). Typing_RTs_JS. GitHub Repository.
 //            https://github.com/kirstenstark/typing_RTs_JS
 // ------------------------------------------------------------
 
 // input to the function:
-// entry = current keypress
-// start = timer that should be initialized upon picture loading
-// input = empty variable initialized beforehand (var input = '';)
-// output_timing = variable that will be added to the output file containing the
+// %timing%= variable that will be added to the output file containing the
 //                  timing of each keypress (will be   counted output_timing_01,
 //                  ..., output_timing_09, output_timing_10, ...)
-// output_letters = variable that will be added to the output file containing each
+// %letters% = variable that will be added to the output file containing each
 //                  pressed key (will be counted output_letters_01, ...,
 //                  output_letters_09, output_letters_10, ...)
-// output_word = variable output_word will contain the entire typed output_word
+// %opentext% = variable output_word will contain the entire typed output_word
 // corrections = whether participants are allowed to use the backspace and
 //                delete keys (default is 'yes')
 
-
-function typing_rts(entry, start=start, input=input,
-  output_timing=%timing%, output_letters=%letters%,
-  output_word=%opentext%, corrections == 'yes'){
-
-  // measure timing
-  var t = new Date()-start; // rt relative to when picture was first displayed
-
-  // save pressed key
-      // corrections allowed
-  if(corrections == 'yes') {
-    input=input+entry.key; // entire string of pressed keys
-  } else {
-      // corrections not allowed
-    // disable backspace key and delete key and save input (entire word)
-    if(entry.keyCode === 8 || entry.keyCode === 46) { // 8 is BackSpace, 46 is delete
-       event.preventDefault();
-    } else {
-       // the variable input contains the input a participant is seeing
-       // (NO BackSpace, delete allowed), while the output_letters and
-       // output_timing variables contain letters and timing for each pressed key,
-       // INCLUDING BackSpaces and deleted keys
-       input=input+eingabe.key; // get total input
-  }
-
-  // optionally: Submit page upon space or enter key press
-  //              { //32 is the space bar, 13 is enter
-  //if ((entry.keyCode == 32 || entry.keyCode == 13) && counter > 2)
-  //          // save total input into internal variable:
-  //    document.getElementById('output_word'+'_01').value = input;
-  //    SoSciTools.submitPage(); // submit page in SoSciSurvey
-  //    document.page.submit(); // submit page directly in JavaScript
-  //                                //  (what the page is needs to be defined
-  //                                //  previously)
-  //}
+// further variables:
+// entry = current keypress
+// start = timer that is initialized upon picture loading
+// input = empty variable initialized beforehand (var input = '';)
 
 
-  // save current key and timing into internal variables
-  if (counter < 10) {
-     document.getElementById('%timing%'+'_0'+counter).value = (t);
-     document.getElementById('%letters%'+'_0'+counter).value = entry.key;
-  } else {
-     document.getElementById('%timing%'+'_'+counter).value = (t);
-     document.getElementById('%letters%'+'_'+counter).value = entry.key;
-  }
-  counter=counter+1;
-})
+
+// ----------
+
+function typing_rts(
+  // can participants correct their typewritten answers?
+  corrections == 'yes',
+  // stimulus
+  %picture% = %picture%,
+  // output variables need to be defined beforehand:
+  %timing% = %timig%,%letters%=%letters%,%opentext%=%opentext%){
+
+  // show picture 500ms after page was fully loaded
+  // (you may want to show a fixation cross before())
+  setTimeout(function() {
+    document.getElementById('pic').setAttribute('src', '%picture%');
+    start = new Date();
+  }, 500);)
+
+  // initialize variables
+  var start;
+  var counter=1;
+  var input=1;
+
+  // define what happens when a keyboard button is pressed
+  // keydown() method triggers rt-assessment:
+  document.addEventListener('keydown', function(entry) {
+         // define input
+        var t = new Date()-start; // rt relative to when picture was first displayed
+
+        // save pressed key
+            // corrections allowed
+        if(corrections == 'yes') {
+          input=input+entry.key; // entire string of pressed keys
+        } else {
+
+            // corrections not allowed
+          // disable backspace and delete keys and save input (entire word)
+          if(entry.keyCode === 8 || entry.keyCode === 46) { // 8 is BackSpace, 46 is delete
+             event.preventDefault();
+          } else {
+             // the variable input contains the input a participant is seeing
+             // (NO BackSpace, delete allowed), while the output_letters and
+             // output_timing variables contain letters and timing for each pressed key,
+             // INCLUDING BackSpaces and deleted keys
+             input=input+entry.key; // entire string of pressed keys
+        }
+
+        // proceed to next page if participants press the space bar (keyCode == 32 is space bar)
+        if ((entry.keyCode == 32 || entry.keyCode == 13) && counter > 2) { //32 is the space bar, 13 is enter
+            document.getElementById('%opentext%'+'_01').value = input; // save total input into internal variable opentext
+            // SUBMISSION AND TRANSFER OF VARIABLES TO SERVER NEEDS TO BE ADDED HERE
+            // SoSciTools.submitPage(); // submit page in SoScSurvey OR
+            // submitForm(); // have your own submitForm function here OR
+            // document.page.submit(); //
+        }
+
+        // save current key and timing into internal variables
+        if (counter < 10) {
+            document.getElementById('%timing%'+'_0'+counter).value = (t);
+            document.getElementById('%letters%'+'_0'+counter).value = entry.key;
+        } else {
+            document.getElementById('%timing%'+'_'+counter).value = (t);
+            document.getElementById('%letters%'+'_'+counter).value = entry.key;
+        }
+        counter=counter+1;
+    })
+}
