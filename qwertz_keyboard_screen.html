@@ -1,0 +1,97 @@
+<!-- QWERTZ kezboard screen
+
+// ------------------------------------------------------------
+// The code helps to screen for specific keyboard types, e.g.
+// in order to ensure that all participants have direct keys for
+// all letters in the language of interest and key positions are
+// identical between participants. The code is optimized to
+// screen for QWERTZ-keyboards, but can easily be adapted to
+// other keyboard types: The idea is to compare event.key and
+// event.code of characters which have specific positions on
+// the keyboard you are interested in. Here, participants are
+// instructed to type the word 'ägyptisch'. The 'ä' has a direct
+// key on the QWERTZ keyboard (code 'Quote') and the 'y' has the
+// code 'KeyZ'. For different keyboard types, another word with
+// characters that have specific positions on that keyboard type
+// should be chosen.
+// ------------------------------------------------------------
+// CITATION: Stark, K. (2021). Typing_RTs_JS. GitHub Repository.
+//            https://github.com/kirstenstark/typing_RTs_JS
+// ------------------------------------------------------------
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>QWERT_keyboard_screen</title>
+      <meta charset="utf-8"/>
+      <!-- instructions and text input field -->
+      <br><center><strong>Type ÄGYPTISCH:</strong> </center><br><br><br>
+      <tr> <td><center><input id="answer" type="text" style = "text-transform:uppercase;margin: 20px;"> </center></td></tr>
+      <br><center><strong>Press Space or Enter to proceed to next page</strong> </center><br><br><br>
+  </head>
+  <body>
+
+  <script type="text/javascript">
+  // compare answer key and code to check whether participants indeed
+      // used a QWERTZ keyboard
+  window.onload = function () {
+    // set cursor to text input field so participants don't need a mouse
+    document.getElementById('answer').focus();
+    // define variables
+    var answerkey;
+    var codea;
+    var codey;
+    var codep;
+    var i = 0;
+
+    document.addEventListener('keydown', logKey);
+
+      function logKey(entry) {
+        // save event.codes of characters ä, y, p
+        if(entry.key == "ä" ){codea=entry.code;}
+        if(entry.key == "y" ){codey=entry.code;}
+        if(entry.key == "p" ){codep=entry.code;}
+
+        if(entry.keyCode==13 || entry.keyCode==32){ // if enter or space is pressed
+          // ckeck whether the instructed word has been typed
+          if(answerkey=='ägyptisch'|| answerkey == 'undefinedägyptisch' || answerkey == 'undefinedäägyptisch' ) {
+            // check whether keCodes are as expected for the keyboard
+            if(codea=='Quote' && codey=='KeyZ' && codep=='KeyP'){
+              document.write('<br><center><strong>Correct!</strong> </center><br><br><br>');
+              // alternatively: proceed to next section of your experiment
+            } else {;
+              answerkey='';
+              document.write('<br><center><strong>You are not using a QWERTZ keyboard!</strong> </center><br><br><br>');
+              // alternatively: custom screenout
+            }
+          } else{
+            // reload page if an incorrect word has been typed
+            document.write('<br><center><strong>Please write <i>ÄGYPTISCH</i>!</strong> </center><br><br><br>');
+            answerkey='';
+            setTimeout(window.location.reload.bind(window.location),1000);
+          //  document.write('<tr> <td><center><input id="answer" type="text" style = "text-transform:uppercase;margin: 20px;"> </center></td></tr>');
+          //  document.write('<br><center><strong>Press Space or Enter to proceed to next page</strong> </center><br><br><br>');
+          }
+        }
+      if(entry.key=='ä'){
+        answerkey=answerkey+entry.key;
+        i = 1;
+      }
+      if(i >0) {
+        answerkey=answerkey+entry.key;
+      }
+        console.log(answerkey)
+
+  }}
+
+  // end survey if participants' typing code indicates that no QWERTZ keyboard was used
+  //if (value('KB03_01') == 'Quote' && value('KB03_02')== 'KeyZ' &&
+  //    value('KB03_03') == 'KeyP') {
+  //        goToPage('consent');
+  //    } else {
+  //        text('keyboard_screenout');  // Verabschiedung anzeigen
+  //        buttonHide();  // Weiter-Knopf ausblenden
+  //}
+  </script>
+</body>
+</html>
