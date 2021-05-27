@@ -28,7 +28,7 @@ Adding a jsPsych implementation is planned.
 
 ## Citation
 
-If you decide to use this codde, I'd be happy if you would cite it: Stark, K. (2021). Stringmatch_typed_naming. GitHub Repository. [https://github.com/kirstenstark/typing_RTs_JS](https://github.com/kirstenstark/typing_RTs_JS)
+If you decide to use this code, I'd be happy if you would cite it: Stark, K. (2021). Typing_RTs_JS. GitHub Repository. [https://github.com/kirstenstark/typing_RTs_JS](https://github.com/kirstenstark/typing_RTs_JS)
 
 ### Any comments, suggestions, extensions?
 
