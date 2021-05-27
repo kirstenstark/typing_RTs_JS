@@ -30,6 +30,11 @@ Adding a jsPsych implementation is planned.
 
 If you decide to use this code, I'd be happy if you would cite it: Stark, K. (2021). Typing_RTs_JS. GitHub Repository. [https://github.com/kirstenstark/typing_RTs_JS](https://github.com/kirstenstark/typing_RTs_JS)
 
-### Any comments, suggestions, extensions?
+## Any comments, suggestions, extensions?
 
 ... please let me know!
+
+
+### License
+
+This work was created by Kirsten Stark at the Humboldt-Universität zu Berlin and is subject to the [MIT License](https://github.com/kirstenstark/typing_RTs_JS/blob/a68d291853edb18fa17f1690e4ea5a3356667dce/LICENSE.md).
