@@ -69,8 +69,6 @@
             document.write('<br><center><strong>Please write <i>ÄGYPTISCH</i>!</strong> </center><br><br><br>');
             answerkey='';
             setTimeout(window.location.reload.bind(window.location),1000);
-          //  document.write('<tr> <td><center><input id="answer" type="text" style = "text-transform:uppercase;margin: 20px;"> </center></td></tr>');
-          //  document.write('<br><center><strong>Press Space or Enter to proceed to next page</strong> </center><br><br><br>');
           }
         }
       if(entry.key=='ä'){
@@ -80,18 +78,10 @@
       if(i >0) {
         answerkey=answerkey+entry.key;
       }
-        console.log(answerkey)
+        //console.log(answerkey)
 
   }}
 
-  // end survey if participants' typing code indicates that no QWERTZ keyboard was used
-  //if (value('KB03_01') == 'Quote' && value('KB03_02')== 'KeyZ' &&
-  //    value('KB03_03') == 'KeyP') {
-  //        goToPage('consent');
-  //    } else {
-  //        text('keyboard_screenout');  // Verabschiedung anzeigen
-  //        buttonHide();  // Weiter-Knopf ausblenden
-  //}
   </script>
 </body>
 </html>
