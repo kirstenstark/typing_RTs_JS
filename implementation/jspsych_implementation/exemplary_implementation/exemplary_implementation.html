@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+    <head>
+        <title>typed_picture_naming_implementation</title>
+        <meta charset="utf-8"; unicode-range="U+1E9E-1E9E">
+
+        <!-- Plugins required to run experiment -->
+        <script src="jspsych-6.3.1/jspsych.js"></script>
+
+                <!-- This is the custom plugin for the typed picture naming -->
+        <script src="jspsych-typed-picture-naming.js"></script>
+
+        <script src="jspsych-6.3.1/plugins/jspsych-fullscreen.js"></script>
+        <script src="jspsych-6.3.1/plugins/jspsych-call-function.js"></script>
+        <script src="jspsych-6.3.1/plugins/jspsych-instructions.js"></script>
+        <script src="jspsych-6.3.1/plugins/jspsych-html-keyboard-response.js"></script>
+        <!--script src="custom-plugins/jspsych-picnaming-voice-record-wav.js"></script-->
+        <link href="jspsych-6.3.1/css/jspsych.css" rel="stylesheet"></link>
+     </head>
+
+
+    <!-- DEFINE ACTUAL EXPERIMENTAL FLOW-->
+    <script>
+       
+        /* ------------- ARRAYS ------------- */
+        /* Set main experiment variables */
+        var timeline = []; // Empty experiment timeline
+
+        /*Stimulus array - this needs to be customized for the actual stimuli*/
+        var item_array = [
+            {item: 'pictures/bus.png', block: 'naming_trial', object:'bus', stim_num: '1', data: {test_part: 'naming_trial', object:'', file: 'bus.png', pic: 'bus', ID: '1'}},
+            {item: 'pictures/dolphin.png', block: 'naming_trial', object:'dolphin', stim_num: '2', data: {test_part: 'naming_trial', object:'', file: 'dolphin.png',  pic: 'dolphin', ID: '2'}},
+            {item: 'pictures/box.png', block: 'naming_trial', object:'box', stim_num: '3', data: {test_part: 'naming_trial', object:'', file: 'box.png', pic: 'box', ID: '3'}},
+            {item: 'pictures/socket.png', block: 'naming_trial', object:'socket', stim_num: '4', data: {test_part: 'naming_trial', object:'', file: 'socket.png', pic: 'socket',  ID: '4'}},
+        ];
+            // Shuffle item order
+        item_array = item_array.sort(() => Math.random() - 0.5);
+
+
+        /* ------------- FLOW ELEMENTS ------------- */
+        /* switch to fullscreen mode*/
+        var fullscreen = {
+            type: 'fullscreen',
+            fullscreen_mode: true,
+            //message: '<p> Das Experiment wechselt in den Vollbild-Modus, sobald Sie auf den Button klicken</p>',
+            //button_label: 'Weiter'
+        } 
+
+        /* define instructions */
+        var instructions = {
+            type: 'html-keyboard-response',
+            stimulus: `<p>Now the demo experiment will start: </p>
+            <p>You will see a series of object pictures. Your task is to type the respective object names
+                as <b>fast</b> and as <b>accurate</b> as possible using your computer keyboard.</p>
+            <p>As soon as you typed the object nane, you can proceed to the next object using the space bar or the enter key.</p>
+            <p>  </p>
+            <p>Press enter to start</p>`,
+            choices: ['Enter']
+        }
+        var end = {
+            type: 'html-keyboard-response',
+            stimulus: `<p><strong>Thank you for trying out the task!</strong></p> <br>
+            <p>The plugin offers several options to customize the task, e.g. regarding the timing (duration of fixation cross and stimulus display, maximal
+                trial duration), the stimulus display size, whether participants are allowed to correct their answers, and whether the object name should be
+                displayed above the object. </p>
+            <p> On the next page, you will see the recorded data. </p><br>
+            <p> Press enter to proceed </p>`,
+            choices: ['Enter'],
+            on_finish: 
+                setTimeout(jsPsych.resumeExperiment, 30000)
+        }
+
+
+
+
+       /* ------------- TIMELINE ------------- */ 
+       // force to enter full screen mode
+       timeline.push(fullscreen);
+       timeline.push(instructions);
+       
+        for (var i = 0; i < item_array.length; i++) {
+           timeline.push(namingtrial = {
+                 type: 'typed-picture-naming',
+                fixcross: 'pictures/fix.png',
+                stimulus: item_array[i].item,
+                stimulus_height: 200, 
+                stimulus_width: 200,
+                maintain_aspect_ratio: true,
+                stim_name: item_array[i].object,
+                stim_number: item_array[i].stim_num,
+                display_name: false,
+                text: 'Press space or enter to proceed',
+                fixcross_duration: 500,
+                stimulus_duration: 6000,
+                trial_duration: 6000,
+                corrections: false,
+                data: item_array[i].data,
+                on_finish: function(data) {
+                    jsPsych.data.addDataToLastTrial(data);
+                }
+            })
+        };
+       timeline.push(end);
+
+        /* ------------- RUN TIMELINE ON JATOS ONLOAD ------------- */ 
+        jsPsych.init({
+            timeline: timeline,
+            preload_images: item_array.item,
+            on_finish: function(){
+                jsPsych.data.displayData();
+            }
+        });
+
+    </script>
+</html>
