@@ -19,7 +19,7 @@ We recommend to present your stimulus and start the timer only after the page ha
 ### Implementations
 We computed our [experiment](add-link-to-preprint-here) in SoSciSurvey. [Here](https://github.com/kirstenstark/typing_RTs_JS/tree/master/implementation) you can find the relevant code bits of the main experimental task, including the timing of picture presentation and the function presented above.  
 
-Adding a cross-platform JavaScript implementation is planned.
+Adding cross-platform JavaScript and jsPsych implementations are currently being developed. The current version of our custom jsPsych-plugin can be found [here](https://github.com/kirstenstark/typing_RTs_JS/tree/master/implementation/jspsych_implementation). In the same folder, there is also a [demo](https://github.com/kirstenstark/typing_RTs_JS/tree/master/implementation/jspsych_implementation/exemplary_implementation) implementation with four trials that runs on a local computer if the entire folder is downloaded.
 
 <img src="https://github.com/kirstenstark/typing_RTs_JS/blob/master/pictures/example_potato.png" width="300">
 
